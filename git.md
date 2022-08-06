@@ -59,3 +59,7 @@
 # Switch a repo from depricated password to SSH Key
 
 git remote set-url origin [SSH_URL]
+
+# Public key issue (Permission denied)
+
+>https://stackoverflow.com/questions/12940626/github-error-message-permission-denied-publickey
