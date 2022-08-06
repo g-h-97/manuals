@@ -1,0 +1,46 @@
+# this is about cli scripting in general
+
+# and starting with if statements form the link : https://linuxacademy.com/blog/linux/conditions-in-bash-scripting-if-statements/
+
+# if statements syntax is like :
+
+	if [ condition ]; then
+		command1
+		command2 
+		.
+		.
+	elif [ condition ]; then
+		command1
+		command2
+		.
+		.
+	else
+		command1
+		command2
+		.
+		.
+	fi
+
+# Note 1 always keep spaces between the 'conditin' and the brackets [ condition ], exactly like 'test condition'
+# Note that ';' is equal to newline '\n' aka 'pressing enter'
+# Note that the brackets are equal to 'test' command, this is really important
+
+	if [ <args> condition ]
+	
+	# is exactly the same as
+	
+	if test <args> condition
+
+# in order to performe multiple tests use 
+	# '&&' or '-a' for 'and'
+	# '||' or '-o' for 'or'
+
+# test has a handful of arguments like
+	# -a for 'and' exactly like '&&'
+	# -o for 'or' exactly like '||'
+	# -f check if file exists
+	# -d check if directory exists
+	# -r is it readable
+	# -w is it writable
+	# -eq numerical equality
+	# ....and a lot more check 'man test' for the complete lis

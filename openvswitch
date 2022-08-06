@@ -1,0 +1,53 @@
+# this is about 'open virtual switch' and 'open virtual network' , Sources :
+
+## OVS :
+# https://www.openvswitch.org/
+# http://docs.openvswitch.org/en/latest/tutorials/faucet/
+# https://blog.scottlowe.org/2012/10/04/some-insight-into-open-vswitch-configuration/
+
+## OVN :
+# https://www.ovn.org/en/
+
+--------------------------OVS--------------------------------
+
+# check the configurtaion :
+	ovs-vsctl show
+	ovs-vsctl list bridge [bridge(optional)]
+	ovs-vsctl list port [port(optional)]
+	ovs-vsctl list interface [interface(optional)]
+
+# create a bridge (vswitch) :
+	ovs-vsctl add-br [bridgename]
+# create a port on the vswitch :
+	ovs-vsctl add-port [bridge] [portname]
+# vlan access in specific port on the vswitch :
+	ovs-vsctl set port [port] tag=[vlan id]
+
+# vlan trunking in specific port on the vswitch :
+	ovs-vsctl set port [port] trunks=[list of vlan ids]
+
+# create a bond (team) between to ports :
+	ovs-vsctl add-bond [bridge] [portname] [iface...]
+
+# enabling link aggrigation protocol on port :
+	ovs-vsctl set port [port] lacp=active
+
+# editing configuration in general :
+	ovs-vsctl [command] [table] [record] [setting=value...]
+	eg : ovs-vsctl set port vnet0 lacp=active
+	eg : ovs-vsctl set port bond0 trunks=1,10,20
+	## this means that openvswith bridges, ports, interfaces, bonds... are nothing but enteries in a database
+	## as tables and records in these table (table:port->record:vnet0) with settings associtated with them
+	## its important to understand this
+
+
+
+
+
+
+
+
+
+
+
+

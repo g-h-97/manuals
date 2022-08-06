@@ -1,0 +1,18 @@
+
+
+
+# generating keys
+
+  openssl genrsa -out private_key.pem 1024
+
+# export the public key
+
+  openssl rsa -in private_key.pem -out public_key.pem -outform PEM -pubout
+
+# encrypt
+
+  openssl rsautl -encrypt -inkey public_key.pem -pubin -in encrypt.txt -out encrypt.dat
+
+# decrypt
+
+  openssl rsautl -decrypt -inkey private_key.pem -in encrypt.dat -out new_encrypt.txt

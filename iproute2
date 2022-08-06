@@ -1,0 +1,28 @@
+# this is iproute2 manual, Sources:
+# https://www.actualtechmedia.com/wp-content/uploads/2017/12/CUMULUS-NETWORKS-Linux101.pdf
+# read about 'bridge' command
+
+# add ip address to interafce
+	ip address add [address/maskbits] dev [interface
+
+
+
+# to create tap
+	sudo ip tuntap add mode tap [tapname]
+
+#to create bridge and bridge
+	ip link add name [bridgename] type bridge
+	ip link set dev [bridgename] up
+
+# adding bridge members
+	ip link set dev [interface] master [bridgename]
+
+# removing bridge members
+	ip link set dev [interfacename] nomaster
+
+# this is how to assign a static ip address to an interface 'br0' bridge using the iproute2 'ip' command from an other interface 'eth0'
+
+	ip address delete $PREFIX dev eth0
+	ip address add $PREFIX dev br0
+	ip route add default via $ROUTE dev br0
+# where $PREFIX == subnet & $ROUTE == route

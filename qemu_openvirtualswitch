@@ -1,0 +1,39 @@
+# this document si about open virtual swith from http://docs.openvswitch.org/en/latest/howto/kvm/
+
+# first we need to create two script for starting and stoping the vm 'tap' interfaces
+
+# star script
+
+	#!/usr/bin/zsh
+	
+	swirch='[bridge]' #the ovs bridge name like 'ovs-br0'
+	
+	ip link set $1 up # $1 in this case is the tap interface fo the vm that qemu is going to create automaticly with this script
+
+	ovs-vsctl add-port ${switch} $1
+
+# stop script
+
+	#!/usr/bin/zsh
+
+	switch='[bridge'] # like 'ovs-br0'
+	ip addr flush dev $1
+	ip link set $1 down
+	ovs-vsctl del-port ${switch} $1
+
+# now to creating the bridge interface 'ovs-br0'
+
+	ovs-vsctl add-br [bridge] # like 'ovs-br0'
+	ovs-vsctl add-port [bridge] [interface] # ovs-br0 eth0
+
+# with that done, add this arrgs to the qemu vm command that you want to connect to the switch 
+
+	-net nic,macaddr=aa:aa:aa:aa:aa:aa -net tap,script=/path/to/start_script,downscript=/path/to/stop_script
+
+# debug the connection with 
+	ovs-dpctl show
+	ovs-ofctl show [bridge] # ovs-br0 for example
+
+# Note that if the scipts error out during the vm execution set the root bit id
+	sudo chown root:root script
+	sudo chmod +s script

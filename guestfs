@@ -1,0 +1,120 @@
+# this is about virtual machines control tools in libguestfs "powerful"
+# Sources :
+## http://libguestfs.org/guestfs-recipes.1.html
+
+------------------------------------------------------------------------------
+|## WARNING : non of the following tools can be used while the vm is running,|
+|## since this will most certainly cause data corruption		     |
+------------------------------------------------------------------------------
+
+
+
+# convert a disk image from thick to thin provisioned :
+	virt-sparsify vm.format --convert [newformat] vm.newformat
+	virt-sparsify --in-place vm.img
+	# See the 'man virt-sparsify' for more info
+
+# check disk usage in vm filesystem :
+	virt-df -a vm.img -h
+
+# ls directory in linux vm :
+	virt-ls -a vm.img dir [path]
+
+# access a vm image :
+	guestfish -i vm.img
+	# Note : this will open the <fs> shell type 'help' for help
+
+# copy a file or directory form/to vm or host :
+	## linux :
+	virt-copy-out -a vm.img /path/to/fileordir /destination
+	virt-copy-in
+	## windows :
+	virt-copy-out -a vm.img 'win:c:\path\to\file' /destination
+	virt-copy-in
+	eg :
+	virt-copy-out -a win10.qcow2 'win:c:\Program Files' .
+	## Note : in case of 'read only file system' error fix the ntfs dirty bit :
+		virt-rescue -a win.img # this will open rescue shell
+		><rescue> lsblk # to see which disk you want to fix
+		><rescue> ntfsfix /dev/sda2 # sda2 in this case in 'c:\'
+	# after this try 'virt-copy-in' or 'guestmount'
+
+# remove/change user password in vm (even root):
+	## linux :
+	virt-edit -a vm.img /etc/passwd -e 's/^user:.*?:/user::/'
+	eg:
+	virt-edit -a kali20.qcow2 /etc/passwd -e 's/^root:.*?:/root::/'
+	
+	## windows :
+	guestfish -i vm.img
+	mv /Windows/System32/sethc.exe /Windows/System32/sethc.exe.bak
+	cp /Windows/System32/cmd.exe /Windows/System32/sethc.exe
+	exit
+	# Note : start the vm in login screen press 'shift' five times to get cmd
+	# in cmd type : 
+	net user Administrator <password>
+
+# extracting initramfs and kernel :
+	mkdir output
+	virt-builder --get-kernel vm.img -o output
+	# Note : use this method to boot a broken vm directly in qemu
+
+# checksum a file in a vm :
+	## linux :
+	guestfish --ro -a vm.img -i checksum sh256 /path/to/file
+	## windows :
+	guestfish --ro -a vm.img -i checksum sh256 'win:\path\to\file'
+
+# delete/touch/stat a file in linux vm :
+	## delete
+	guestfish -a vm.img -i rm /path/to/file
+	## touch
+	guestfish -a vm.img -i touch /path/to/file
+	## stat
+	guestfish --ro -a vm.img -i stat /path/to/file
+
+# dump raw fs contents in a disk image :
+	guestfish --ro -a vm.img run : download /dev/sda[X] sda[X].img
+	#Note: to list disks in image (sda1, sda2...) use :
+	virt-filesystems -a vm.img -l
+
+# edit a file in vm :
+	virt-edit -a vm.img /path/to/file
+	eg :
+	virt-edit -a kali20.qcow2 /boot/grub/grub.cfg
+
+# rescue a vm :
+	virt-rescue -a vm.img
+
+# inspect all details on virtual machine disk image :
+	virt-inspector vm.img | grep -A [linesafter] -B [linesbefor] <tag>
+	# Note : using grep is a must since the output is huge if the vm is complex
+	# see 'man virt-inspector' for more info
+
+# sysprep a linux host for cloning :
+	# man virt-sysprep
+
+# convert other hypervisor images (vmware,xen...) to kvm/qemu :
+	virt-v2v -i disk vm.img -o local qemuvm.img
+	eg:
+	virt-v2v -i disk kali.vmdk -o local qemukali.qcow2
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+

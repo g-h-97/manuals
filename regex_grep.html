@@ -1,0 +1,220 @@
+<html><head><title>Regular Expressions in grep</title></head><body background="background.gif">
+<a href="http://www.robelle.com/"><img alt="[Robelle]" src="robelle.gif"></a>
+<a href="welcome.html"><img alt="[SmugBook]" src="smug.gif"></a>
+<a href="index.html"><img alt="[Index]" src="index.gif"></a>
+<a href="manpages.html"><img alt="[Prev]" src="up.gif"></a>
+<a href="whence.html"><img alt="[Next]" src="down.gif"></a>
+
+<h3>Searching Files on UNIX</h3>
+
+On <a href="mpe.html">MPE</a> you can display files
+using the :Print command, Fcopy, <a href="nuggets.html#magnet">Magnet</a>,
+or <a href="qedit.html">Qedit</a> (with pattern
+match searches). On <a href="hp-ux.html">HP-UX</a>
+you can display files using <b>cat</b> and even better using
+<b>more</b> (and string search using the slash "/" command), and
+<a href="qedit.html">Qedit</a> (including searches of $Include files, and so on),
+but if you really want to search for patterns of text
+like a UNIX guru, <a href="#grep">grep</a> is the tool for you.
+<p>
+<a href="regexpr1.txt">Text version.</a>
+<p>
+<table border>
+<tr>
+<td>cat report.c<td>{prints file on stdout, no pauses}
+<tr>
+<td>cat -v -e -t dump<td>{show non-printing characters too}
+<tr>
+<td>cat &gt;newfile<td>{reads from stdin, writes to 'newfile'}
+<tr>
+<td>cat rpt1.c inp.c test.s &gt;newfile<td>{combine 3 files into 1}
+<tr>
+<td>more report.c<td>{space for next page, q to quit}
+<tr>
+<td>ps -a | more<td>{page through the full output of ps}
+<tr>
+<td>grep smug *.txt<td>{search *.txt files for 'smug'}</td></tr>
+</table>
+<p>
+MPE users will take a while to remember that
+<b>more</b>, like most UNIX tools,
+responds to a Return by printing the next line,
+not the next screen. Use the Spacebar to print the next
+page.  Type "q" to quit.
+To scan ahead to find a string pattern, type "/" and enter
+a <a href="#expression">regular expression</a> to match.
+For further help, type "h".
+
+<a name="grep"><h4>Searching Files Using UNIX grep</h4></a>
+
+The <b>grep</b> program is a standard
+<A HREF="unix.html">UNIX</A>
+utility that searches through a set of files for an arbitrary text
+pattern, specified through a
+<a href="#expression">regular expression.</a>
+Also check the <a href="manpages.html">man pages as well</a>
+for <STRONG>egrep</STRONG> and <STRONG>fgrep</STRONG>. The
+<A HREF="mpe.html">MPE</A>
+equivalents are
+<b>MPEX</b>
+and
+<A HREF="nuggets.html#magnet">Magnet</A>, both third-party products.
+By default, grep is case-sensitive (use -i to ignore case).
+By default, grep ignores the context of a string (use -w to
+match <i>words</i> only).
+By default, grep shows the lines that match (use -v to show
+those that <b>don't</b> match).
+<p>
+<a href="regexpr2.txt">Text version.</a>
+<P>
+<table border>
+<tr>
+<td> % grep BOB tmpfile<td>{search 'tmpfile' for 'BOB' anywhere in a line}
+<tr>
+<td> % grep -i -w blkptr * <td>{search files in <a href="cwd.html">CWD</a> for word <i>blkptr</i>, any case}
+<tr>
+<td> % grep run[- ]time *.txt<td>{find 'run time' or 'run-time' in all txt files}
+<tr>
+<td> % who | grep root <td>{pipe <b>who</b> to <b>grep</b>, look for <i>root</i>}</td></tr>
+</table>
+<p>
+<a name="expression"><h4>Understanding Regular Expressions</h4></a>
+
+<b>Regular Expressions</b> are a feature of <a href="unix.html">UNIX</a>.
+They describe a pattern to match, a sequence of characters,
+not words, within a line of text.
+Here is a quick summary of the special characters used
+in the <a href="#grep">grep</a> tool and their meaning:
+<p>
+<a href="regexpr3.txt">Text version.</a>
+<p>
+<table border>
+<tr>
+<td>^ (Caret)<td>=<td>match expression at the start of a line, as in ^A.
+<tr>
+<td>$ (Question)<td>=<td>match expression at the end of a line, as in A$.
+<tr>
+<td>\ (Back Slash)<td>=<td>turn off the special meaning of the next character, as in \^.
+<tr>
+<td>[ ] (Brackets)<td>=<td>match any <b>one</b> of the enclosed characters, as in [aeiou].
+Use Hyphen "-" for a range, as in <code>[0-9]</code>.
+<tr>
+<td>[^ ]<td>=<td>match any one character <b>except</b> those enclosed in [ ], as in [^0-9].
+<tr>
+<td>. (Period)<td>=<td>match a single character of any value, except end of line.
+<tr>
+<td>* (Asterisk)<td>=<td>match zero or more of the preceding character or expression.
+<tr>
+<td>\{x,y\}<td>=<td>match <b>x</b> to <b>y</b> occurrences of the preceding.
+<tr>
+<td>\{x\}<td>=<td>match exactly <b>x</b> occurrences of the preceding.
+<tr>
+<td>\{x,\}<td>=<td>match <b>x</b> or more occurrences of the preceding.</td></tr>
+</table>
+<p>
+As an <a href="mpe.html">MPE</a> user, you may
+find regular expressions difficult to use at first.
+Please persevere, because they are used in many
+UNIX tools, from <b>more</b> to <b>perl</b>.
+Unfortunately, some tools use simple regular expressions and others use extended
+regular expressions and some extended features have been merged
+into simple tools, so that it looks as if every tool has its own
+syntax. Not only that, regular expressions use the
+same characters as shell <a href="wildcard.html">wildcarding</a>,
+but they are <b>not</b> used in exactly the same way.
+What do you expect of an operating system built by graduate students?
+<p>
+Since you usually type regular expressions within
+shell commands, it is good practice to enclose the regular
+expression in single quotes (') to stop the shell from expanding
+it before passing the argument to your search tool.
+Here are some examples using <b>grep</b>:
+<p>
+<a href="regexpr4.txt">Text version.</a>
+<p>
+<table border>
+<tr>
+<td>grep smug files<td>{search <i>files</i> for lines with 'smug'}
+<tr>
+<td>grep '^smug' files<td>{'smug' at the start of a line}
+<tr>
+<td>grep 'smug$' files<td>{'smug' at the end of a line}
+<tr>
+<td>grep '^smug$' files<td>{lines containing only 'smug'}
+<tr>
+<td>grep '^\^s' files<td>{lines starting with '^s', "\" escapes the ^}
+<tr>
+<td>grep '[Ss]mug' files<td>{search for 'Smug' or 'smug'}
+<tr>
+<td>grep 'B[oO][bB]' files<td>{search for BOB, Bob, BOb or BoB }
+<tr>
+<td>grep '^$' files<td>{search for blank lines}
+<tr>
+<td>grep '[0-9][0-9]' file<td>{search for pairs of numeric digits}</td></tr>
+</table>
+<p>
+<b>Back Slash</b> "\" is used to <i>escape</i> the next
+symbol, for example, turn off the special meaning that it has.
+To look for a Caret "^" at the start of a line, the
+expression is <code>^\^</code>.
+<b>Period</b> "." matches any single character. So <code>b.b</code> will
+match "bob", "bib", "b-b", etc.
+<b>Asterisk</b> "*" does not mean the same thing in regular expressions
+as in wildcarding; it is a modifier that applies to the
+preceding single character, or expression such as <code>[0-9]</code>.
+An asterisk matches <b>zero</b> or more of what precedes it.
+Thus <code>[A-Z]*</code> matches any number of upper-case letters,
+including none, while <code>[A-Z][A-Z]*</code> matches <b>one</b>
+or more upper-case letters.
+<p>
+The <b>vi</b> editor uses <code>\&lt; \&gt;</code> to match characters
+at the beginning and/or end of a <b>word boundary</b>.
+A word boundary is either the edge of the line or any character
+except a letter, digit or underscore "_".
+To look for <code>if</code>, but skip <code>stiff</code>, the
+expression is <code>\&lt;if\&gt;</code>.
+For the
+same logic in <b>grep</b>, invoke it with the <b>-w</b> option.
+And remember that
+regular expressions are <b>case-sensitive</b>.  If you don't
+care about the case, the expression to match "if" would be
+<code>[Ii][Ff]</code>,
+where the characters in <b>square brackets</b> define a character
+set from which the pattern must match one character. Alternatively, you
+could also invoke <b>grep</b> with the <b>-i</b> option to ignore case.
+<P>
+Here are a few more examples of <b>grep</b> to show you what
+can be done:
+<p>
+<a href="regexpr5.txt">Text version.</a>
+<p>
+<table border>
+<tr>
+<td>grep '^From: ' /usr/mail/$USER<td>{list your mail}
+<tr>
+<td>grep '[a-zA-Z]'<td>{any line with at least one letter}
+<tr>
+<td>grep '[^a-zA-Z0-9]<td>{anything not a letter or number}
+<tr>
+<td>grep '[0-9]\{3\}-[0-9]\{4\}'<td>{999-9999, like phone numbers}
+<tr>
+<td>grep '^.$'<td>{lines with exactly one character}
+<tr>
+<td>grep '"smug"'<td>{'smug' within double quotes}
+<tr>
+<td>grep '"*smug"*'<td>{'smug', with or without quotes}
+<tr>
+<td>grep '^\.'<td>{any line that starts with a Period "."}
+<tr>
+<td>grep '^\.[a-z][a-z]'<td>{line start with "." and 2 lc letters}</td></tr>
+</table>
+<p>
+<hr>
+<a href="http://www.robelle.com/"><img alt="[Robelle]" align=bottom src="robelle.gif"></a>
+<a href="welcome.html"><img alt="[SmugBook]" src="smug.gif"></a>
+<a href="index.html"><img alt="[Index]" src="index.gif"></a>
+<a href="unix.html"><img alt="[Unix]" src="chapter.gif"></a>
+<a href="manpages.html"><img alt="[Prev]" src="up.gif"></a>
+<a href="whence.html"><img alt="[Next]" src="down.gif"></a>
+
+</body></html>

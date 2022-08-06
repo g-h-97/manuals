@@ -1,0 +1,16 @@
+# this is how to share a folder bitween host and guests :
+# https://xapax.github.io/blog/2017/05/09/sharing-files-kvm.html
+
+# create a folder in the host and change it's group owner to 'libvirt'
+	mkdir /home/user/share
+
+# in virt-manager create a new hardware 'filesystem share' set :
+	tyep : mount
+	driver : Default
+	mode : Squash
+	Source path : /home/user/share
+	Target path : share ( this is just a word, it's not actually a path)
+
+# start the guest vm, and type in the terminal
+	mkdir /home/guest_user/hostfiles
+	mount -t 9p -o trans=virtio,version=9p2000.L share (Target path) /home/user/hostfiles

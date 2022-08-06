@@ -1,0 +1,151 @@
+// this is about the reverse engineering frame work "radare2" and it awesome :D
+// most of this is from the guide https://www.megabeets.net/a-journey-into-radare-2-part-1/
+// 			      and https://www.megabeets.net/a-journey-into-radare-2-part-2/
+//and this youtube video https://www.youtube.com/watch?v=317dNavABKo
+
+==========================useful====================================================
+
+
+# e stands for evaluable configuration variables
+	e?			(list all variables)
+	e??			(list all variables with discription)
+	Ve			(to see all varibales in visual mode)
+	e [confg.var] = ?		(list all possible values for [config.var])
+	e io.cach		(enables write to cache)
+	e scr.utf8=1		(this command activates utf8 drawing)
+	e scr.utf8.curve=1	(the same as the last one)
+	e asm.describe=1	(enable explanation comments [what is hapening] for every disassm line use case: new instruction set)
+	e asm.pseudo=1		(enables pseudo code for every instruction)
+
+p=e			(entropy graph)
+/m			(looks for magic words like binwalk)
+wtf!			(write the file)
+pm			(same as /m)
+r2 gzip://file.gz	(for using compressed files directyly)
+/ search		(search like vim )
+eco 			(choose color map)
+ecr			(random color map)
+
+==========================important====================================================
+
+V 			(visual mode)
+	p/P 			(switch visual mode view)
+
+V!			(visual panel mode)
+	# panel mode sub commands
+	m	(to select the to menu)
+	(	( open parenthses activate snow effect just for fun)
+
+VV 			(graph mode)
+	+/-			(zoom in/out)
+c 			( to use cursor mode to move between lines)
+i 			( insert mode to edit hex op code or ascii ; really powerful with cursor mode )
+wa 			( write assembly really powerful with @ like 'wa 90 @ 0x1234' for write nop at address 0x1234 )
+@ 			(for doing temporary stuff like 'pd' at some addrss 'pd 10 @ 0x1234' print 10 line diss at 0x1234)
+~ 			(for grip like 's main' then 'pdf ~Hello' will search for hello in main)
+# press enter when on "jump" or "call" instruction to go the destination
+# press "u" to go back 
+# next to every function there is a number in square brackets press to seek there right a way [instane]
+
+
+
+s 			(seek like s main or s ADDR)
+pd 			(print disassembly like pd 10 [10 lines] )
+i 			(binary information like binwalk or rabin2)
+	#i is a wrapper around rabin2 for radare2
+	ie 		(entry point info for the binary)
+	iz / izz 	(print strings)
+fs 			(print flag spaces)  # used like this first "fs" to get <flagspacename> "fs <flagspacename>;f"
+# you can comment using ";[-]yourcomment"
+
+d?			(for debugging options)
+
+==========================ESIL====================================================
+
+//radare2 have an emulation engine for other instruction set to be executed on the host
+//and it uses an intermediate language name ESIL "Evaluable String Intermediate Language"
+//it has infinite memory an registers and Native register aliases ( register names for every arch : x86, arm, aarch64...)
+//it work like "stack machine" look wikipedia for that, but in general a machine that uses only a stack to operat
+
+ae		(is the base esil emulation command)
+ae?/ae??	(for help)
+	#example of using esil : 'ae 3,10,+' will output '0xd'
+	#by pushing 3 to the stack then 5 then applying the operation on the the last two elements of the stack '+'
+
+//however esil can't be a real 'stack machine' sice normal cpus need random access to memory ,and conditional statements
+//(flow control), registers; and these are implemented as well; they are called 'steroids'
+
+//esil uses its own internal variables (flags), prifixed with '$'; and they'r esil registers like : $z -> zeroflag
+// $cx -> carryflag ...., we can also define ower own set of custom flags 
+// esil enables us to emulate parts of the disassembly wich is insane
+
+# Note that you may need the 'e io.cache = 1' to emulate writes
+aeim		(esil initialize machine to start esil)
+aer		(to see the esil register values)
+aeip [address]	(to set the instrucion pointer to [address] where the emulation will start)
+	//you can type 'aeip' in the curent address to set it as start address
+aesu [address]	(to seek until the address)
+	//for example seek to where you want the emulation to start 's 0x1234' init esil 'aeim' enable 'io.cache' and
+	//seek until 'aesu 0x1239', esil will emulate that part and return the result to the variable in the disassembly
+	//like if the code is executed, so you need to print the result in the variable at the begining of the function
+
+==========================Scripting====================================================
+//radare2 has an scripting api called 'r2pipe' with the following methods : open(), cmd(), cmdj(), close()
+//this api support a lot of languages
+//Example in pyhton:
+
+import r2pipe
+r2obj = r2pipe.open('/path/to/binary')
+r2obj = cmd('aaa')
+r2obj = cmd('s main;pdf')
+r2obj = cmd('aeim; aeip; aesu 0x1234') // check ESIL section
+
+
+==========================r2frida====================================================
+//r2frida is radare2 plugin for dynamic analysis : attaching to running processes on the system, code injection...
+//install it with : 'r2pm -ic r2frida'
+
+\		(is the base command for frida)
+\?		(to list all possible commands)
+
+//you need 'sudo' or just 'sudo sysctl kernel.yama.ptrace_scope=0' to be able to attach to a running process
+
+r2 frida://[processname]or[pid]		(attach to a running process by process name or pid)
+\ie		(entry point address)
+s [entrypoint]	(seek to entry point address)
+//and go from there
+
+
+
+==========================r2ghidra-dec====================================================
+// r2ghidra-dec is a decompiler from ghidra added as plug in radare2, which is really powerful
+// install with : 'r2pm -i r2ghidra-dec'
+// you can also use it from 'cutter' the radare2 gui
+
+pdg		(the base command)
+pdg?		(for more info)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

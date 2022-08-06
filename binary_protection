@@ -1,0 +1,16 @@
+nx     = Non Executable Stack
+canary = an integer value checked before the return value
+	//in case of buffer overflow this vaule must be over 
+	//writen before the function return address, in this 
+	//case the execution will stop; this idea is taken from 
+	//the mine canary used to check for dangerous gases in 
+	//the mine befor the humans get it.
+
+pic/pie    = Position Independent Code / Position Independent Executable ,
+	    //is a type of programs that doesn't on the loading position
+	    //in memory to execute, in the other hand there are 'absolute code'
+	    //which is position dependent
+
+// this is from https://tk-blog.blogspot.com/2009/02/relro-not-so-well-known-memory.html
+relro  = "Relocation Read-Only" relro is memory curruption mitigation technique and there are two deferent
+	//modes : partial relro / full relro

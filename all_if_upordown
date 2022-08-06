@@ -1,0 +1,13 @@
+# this is how you can bring interfaces up or down in linux
+
+# using iproute2 'ip' command
+	
+	ip link set [interface] up
+	ip link set [interface] down
+
+# using 'nmcli'
+
+	nmcli radio wifi on
+	nmcli radio wifi off
+
+# 'ifconfig' depricated

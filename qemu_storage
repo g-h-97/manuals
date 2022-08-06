@@ -1,0 +1,16 @@
+# this is about how to create virtual disks for your qemu vms
+
+# creating a thin provisioned disk
+qemu-img create -f [format] [path/name.format] [size G]
+// example
+qemu-img create -f qcow2 kali20.qcow2 80G
+
+# creating a thik provisioned disk
+qemu-img create -o preallocation=full -f [format] [path/name.format] [size G]
+// example
+qemu-img create -o preallocation=full -f vdi kali20.vdi 80G
+
+# converting a thin to thik provisioned
+qemu-img convert -p -f [inputformat] -O [outputformat] -S 0 [path/inputfile.format] [path/outputfile.format]
+// example
+qemu-img convert -p -f qcow2 -O qcow2 -S 0 kali20.qcow2 kali20.qcow2

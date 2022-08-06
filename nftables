@@ -1,0 +1,151 @@
+# this is about linux firewall 'nftables', Sources:
+	## https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/getting-started-with-nftables_configuring-and-managing-networking
+	## https://www.youtube.com/watch?v=FXTRRwXi3b4
+
+
+# nftables scripts start with
+	#!/usr/sbin/nft -f
+
+# scripts support multiple formates :
+ ## the 'nft list ruleset' format:
+
+ 	==========================================================
+	#!/usr/sbin/nft -f					 |
+								 |
+	# Flush the rule set					 |
+	flush ruleset						 |
+								 |
+	table inet example_table {
+		chain example_chain {
+	# Chain for incoming packets that drops all packets that
+	# are not explicitly allowed by any rule in this chain
+		type filter hook input priority 0; policy drop;
+
+	# Accept connections to port 22 (ssh)
+			tcp dport ssh accept
+		}
+	}
+	===========================================================
+
+ ## direct 'nft' commands :
+ 
+ 	=================================================================================================
+	#!/usr/sbin/nft -f
+	
+	# Flush the rule set
+	flush ruleset
+	
+	# Create a table
+	add table inet example_table
+	
+	# Create a chain for incoming packets that drops all packets
+	# that are not explicitly allowed by any rule in this chain
+	add chain inet example_table example_chain { type filter hook input priority 0 ; policy drop ; }
+	
+	# Add a rule that accepts connections to port 22 (ssh)
+	add rule inet example_table example_chain tcp dport ssh accept
+	==================================================================================================
+
+
+# commands from youtube video above
+	## list rules
+	nft list ruleset
+
+	## flush rules
+	nft flush ruleset
+
+	## add a net table
+	nft add table [family] [tablename]
+	ex:
+	nft add table inet filter # inet = ip4+ip6 can be ip4,ip6,arp...
+
+	## add a chain to a table
+	nft add chain [family] [table] [chainname] { type [type] hook [hook] priority [int] \;} # add \ before ; in cli
+	ex:
+	nft add chain inet filter input { type filter hook input priority 0 \;}
+
+	## add rule to a chain 
+	nft add rule [family] [table] [chain] [rulename]
+	ex:
+	nft add rule inet filter input counter # this rule counts packets
+# sets	:
+	## creating sets
+	nft add set [family] [table] [setname] {type [type] \;}
+	ex:
+	nft add set inet filter myset {type ip4_addr \;}
+
+	## adding elements to a set
+	nft add element [family] [table] [set] {element1, element2, ...}
+	ex:
+	nft add element inet filter myset { 10.1.10.1, 127.0.0.1 }
+
+	## add rule with a predefined set
+	nft add rule [family] [table] [chain] [family] [rule]
+	ex:
+	nft add rule inet filter input inet saddr @myset counter
+
+# maps :
+	## creating a map 
+	nft add map [family] [table] [mapname] { type [type]: [mark ????] \;}
+	ex:
+	nft add map inet filter mymap { type ip4_addr : mark \;}
+
+	## adding elements to a map
+	nft add element [family] [table] [map] { element1 : mapto, element2 : mapto, ... }
+	ex:
+	nft add element inet filter mymap { 10.1.10.1 : 0xa, 10.1.10.2 : 0xb }
+
+	## adding rule with a predefined map
+	nft add rule [family] [table] [chain] [rule]
+	ex:
+	nft add rule inet filter input ct mark???? set ip saddr map @mymap
+	nft add rule inet filter input meta mark???? set ip saddr map @mymap
+
+	## creating a constant map in rule
+	nft add rule [family] [table] [chain] [rule with map]
+	ex:
+	nft add rule inet filter input ct mark set inet saddr map { 10.1.10.1 : 0xa, 10.1.10.2 : 0xb }
+
+# concatinations :
+	## Note : iifname = input interface name (slow)  ; iif = input interface index (faster) use only interfaces that exist on your system
+	
+	## concatination
+	ex:
+	nft add rule ip filter input meta iifname . ip saddr { "eth0" . 10.1.10.1, "lo" . 127.0.0.1 }
+
+
+# deleteing rules :
+	
+	## get the handle of the rule you want to delete
+	nft -a list ruleset
+
+	## delete the rule
+	nft delete rule [family] [table] [chain] handle [number]
+
+# replacing rules :
+	
+	## get the handle
+	nft -a list ruleset
+
+	## replace the rule
+	nft replace rule [family] [table] position [number] [newrule]
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

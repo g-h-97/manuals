@@ -1,0 +1,9 @@
+# this is how to create a snapshot of a virtual machine using qemu-img
+# a snapshot is basically a file that get changed instead of the original vm disk file using write redirection to the snapshot file
+
+# Note that the vm shoud be off
+# the command is
+//qemu-img create -f [foramt] -b [path/originaldisk.format] [snapshot.format]
+
+# after this start the vm from the [snapthot.format] instead of the [originaldisk.format]
+# if you want to revert back start from the previous disk image

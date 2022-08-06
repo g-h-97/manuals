@@ -1,0 +1,29 @@
+
+# This is aboud backup technologies beit hard/software
+
+# LTO technology: 
+-----------------
+	stands for Linear Tape-Open, it's a drive whith old magnitic tape cartridges.
+	it has diffrent versions LTO-1 LTO-2 LTO-3 LTO-4 all the way up to LTO-10 as of 2020.
+	mostly used in enterprise environments for archiving data.
+	write speed is not an huge issue.
+
+# Upspin Project : ( unknown )
+------------------
+
+# IPFS Project : ( unknown )
+----------------
+
+# Keybase Filesystem Project : ( unknown )
+------------------------------
+
+# Perkeep project : --> needs more work :)
+-------------------
+	is a set of protocols that claim to be compatible whith hard/software basicaly for ever.
+
+# rclone & rsync manual: --> needs more work :)
+-----------------------
+rclone config
+name of service by number
+fill the email and password of the service
+rclone sync [source] [destination:] -P "the : are a must"

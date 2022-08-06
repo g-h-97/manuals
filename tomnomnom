@@ -1,0 +1,45 @@
+_httprobe tomnomnom
+
+_meg	tomnomnom
+
+_tee
+
+_assetfinder	tomnomnom
+
+_enumeration??
+
+_burp turbo intruder
+
+_grep -Hnri n=linenumber r=recurcive i=ignorecase
+
+_pipe text to vim " | vim -"
+
+_"/" in vim to search and press "n" for next word
+
+_":%!" %=current_file !=run_in_shell (to edit the text in bash and bring it back to vim) 
+		ex:	:%!grep somthing (if you want lines with only "somthing" on them)
+		or:	:%!grep -v somthing (if you want to get rid of lines with "somthing" on them)
+				-v for invert works amazing with -i for ignore case
+
+_gf tomnomnom tool, or grepfor it works with predefined assets or regular expressions ERE to look for stuff
+		ex: gf base64 , gf aws-keys , gf go-functions ...
+		note: reverse this tool
+_ctrl+v in vim to visual_block mode to select verticaly and delete using "x"
+
+_ "." in vim normal mode means repeat last thing i did
+
+_vim "/\.$" seach for (/) a dot (.) and dont treat it as a regex (\) at the end of lines ($)
+
+_to do a search and replace ":%s/seach_for_this/replace_it_with_this/"
+
+_"xargs" to run a command for each line (to repeat)
+		ex: xargs -n1 -I{} sh -c 'echo {} | base64 -d'
+			-n1 means one line at the time
+			-I{} it's like a variable for the line (it means this line do this or that with it for every line)
+			-c means run this command in a shell "sh"
+_waybackurls command
+
+_head command
+
+_seclists website!
+
