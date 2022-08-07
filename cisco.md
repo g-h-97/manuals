@@ -1537,3 +1537,36 @@ Control And Provision Wireless Access Points, Protocol allows an access point to
 
 - Packets are forwarded based on their `FEC` to the right `LSP` by an `LSR`
 - Labels are shared across the network using `LDP`
+
+# EPC Embedded Packet Capture Example
+
+- Create an extended ACL in global config mode
+> ip access-list extended PCAP_ACL
+
+- Create a buffer for the PCAP in privileged mode
+> monitor buffer BUF size 2048 max-size 1518 linear
+
+- Added the ACL to the buffer
+> monitor capture buffer BUF filter access-list PCAP_ACL
+
+- Create a capture point on an interface
+> monitor capture point ip cef POINT fastethernet 0/1 both
+
+- Attache the buffer to the capture point
+> monitor capture point associate POINT BUF
+
+- Start capture
+> monitor capture point start POINT
+
+- Wait for a while for the buffer to fill-up
+> monitor capture point stop POINT
+
+- List buffer contents (In HEX)
+> monitor capture buffer BUF dump
+
+- Export pcap to tftp machine
+> monitor capture buffer BUF export tftp://IP/BUF.pcap
+
+- Clean
+> no monitor capture point ip cef POINT fastEthernet 0 both
+> no monitor capture buffer BUF
