@@ -76,3 +76,20 @@ If you don't want to use `tabbed` for what ever reason
 ```
 st -T %d -e telnet %h %p
 ```
+
+# Quick nat on edge router
+
+Provided that everything else is configured, IPs, no shut, Default Routes...etc
+
+```
+int [Outside]
+ip nat outside
+int [Inside]
+ip nat inside
+exit
+ip nat inside source list 1 interface [Outside] overload
+access-list 1 permit any
+```
+
+If the overload command didn't take effect with error `%Dynamic mapping not found` just keep trying or shutdown the interface `Outside`:
+> https://www.cisco.com/c/en/us/support/docs/ip/network-address-translation-nat/13779-clear-nat-comments.html
