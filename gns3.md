@@ -87,9 +87,10 @@ ip nat outside
 int [Inside]
 ip nat inside
 exit
-ip nat inside source list 1 interface [Outside] overload
 access-list 1 permit any
+ip nat inside source list 1 interface [Outside] overload
 ```
 
 If the overload command didn't take effect with error `%Dynamic mapping not found` just keep trying or shutdown the interface `Outside`:
 > https://www.cisco.com/c/en/us/support/docs/ip/network-address-translation-nat/13779-clear-nat-comments.html
+
