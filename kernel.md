@@ -1,6 +1,4 @@
 
-
-
 # Kernel Modules
 
 > Source: `https://en.wikibooks.org/wiki/The_Linux_Kernel/Modules`
@@ -88,4 +86,10 @@ depmod
 # System Calls (Syscalls)
 
 In order for user space processes `Ring 3` to be able communicate to the kernel at `Ring 0` an interface must be used, it's called `System Calls` or `Syscalls`.
+
+# Netem (Network Emulator)
+
+>https://wiki.linuxfoundation.org/networking/netem
+
+This kernel module can be used to manipulate packets to emulate WAN (Delay, Jitter, Corruption, Duplications...etc)
 

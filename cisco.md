@@ -985,6 +985,13 @@ interface vlan [NUMBER]
 ip address [ADDR]
 ```
 
+#### SVI Not Routing
+
+> https://learningnetwork.cisco.com/s/question/0D53i00000Kt58BCAR/svi-routing-issue
+> https://community.cisco.com/t5/switching/svi-does-not-route-traffic/td-p/2559720
+
+`no ip cef`
+
 # EtherChannel
 
 Etherchannels allow for port aggregation in Cisco equipment either by using Cisco's proprietary protocol `PAgP` -> `Port Aggregation Protocol` or the open standard `LACP` -> `Link Aggregation Control Protocol`. Etherchannel in able to handle up to 8 ports total in a single logical channel group.
